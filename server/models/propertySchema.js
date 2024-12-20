@@ -6,10 +6,10 @@ const PropertySchema = new Schema({
     title: { type: String, required: true },  
     description: { type: String }, 
     price: { type: Number, required: true }, 
-    location: {
-      type: { type: String, enum: ["Point"], required: true },  
-      coordinates: { type: [Number], required: true } // Coordinates array [longitude, latitude]
-    },
+      location: {
+    type: { type: String, default: 'Point' },
+    coordinates: [Number], // [longitude, latitude]
+  },
     property_type: { 
       type: String, 
       enum: ["apartment", "house", "plot", "commercial"], 
