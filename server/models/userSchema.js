@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     phone: { type: String, required: true },
-    role: { type: String, enum: ["normal_users","admin"], required: true },
+    roleId: { type: Schema.Types.ObjectId, ref: "Role", required: true },
     profile_picture: { type: String }, // Optional
     
   },{ timestamps: true });

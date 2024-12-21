@@ -10,8 +10,10 @@
   "author": "Teamgrid Solutions Private Limited",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-validator": "^7.2.0",
     "mongoose": "^8.9.1",
     "nodemon": "^3.1.9"
   }
