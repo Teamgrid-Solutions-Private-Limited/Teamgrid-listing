@@ -244,31 +244,40 @@ class userController {
     }
   }
 
-  // Get all users
   static async getAllUsers(req, res, next) {
     try {
       // Extract query parameters for filtering, pagination, and sorting
-      const { limit, skip, sort, ...filter } = req.query;
+      const { page = 1, limit = 10, sort = "-createdAt", ...filters } = req.query;
   
-      // Parse limit and skip to integers for MongoDB operations
+      // Parse limit and skip for pagination
+      const parsedLimit = parseInt(limit, 10);
+      const parsedPage = parseInt(page, 10);
+      const skip = (parsedPage - 1) * parsedLimit;
+  
+      // Pass options and filters to the service
       const options = {
-        limit: parseInt(limit, 10) || 10, // Default limit to 10
-        skip: parseInt(skip, 10) || 0,   // Default skip to 0
-        sort: sort || "-createdAt",      // Default sort by newest
+        limit: parsedLimit,
+        skip,
+        sort,
       };
   
-      // Fetch users with the specified options
-      const users = await userService.getAllUsers(filter, options);
+      const { users, total } = await userService.getAllUsers(filters, options);
   
       res.status(200).json({
         success: true,
         message: "Users retrieved successfully",
         data: users,
+        meta: {
+          currentPage: parsedPage,
+          totalPages: Math.ceil(total / parsedLimit),
+          total,
+        },
       });
     } catch (error) {
       next(error);
     }
   }
+  
   
 }
 
