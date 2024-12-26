@@ -4,8 +4,8 @@ class roleController{
 
   static createRole = async (req, res) => {
     try {
-      const { name } = req.body;
-      const role = new Role({ name });
+      const { roleName } = req.body;
+      const role = new Role({ roleName });
       await role.save();
       res.status(201).json(role);
     } catch (error) {

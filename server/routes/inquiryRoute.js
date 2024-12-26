@@ -3,7 +3,7 @@ const InquiryController = require('../controllers/inquiryController'); // Import
 const router = express.Router();
 
 // Route to create a new inquiry
-router.post('/inquiries', InquiryController.createInquiry);
+router.post('/add', InquiryController.createInquiry);
 
 // Route to get all inquiries
 router.get('/inquiries', InquiryController.getAllInquiries);

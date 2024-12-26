@@ -1,55 +1,102 @@
+
+// module.exports = upload;
 const multer = require("multer");
+const sharp = require("sharp");
+const fs = require("fs-extra");
 const path = require("path");
-const fs = require("fs");
 
-const maxSize = 5 * 1024 * 1024; // Maximum file size (5 MB)
+const maxSize = 5 * 1024 * 1024; // Maximum file size: 5MB
 
-// Ensure upload directory exists
-const uploadDir = path.join(__dirname, "../my-upload/images");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure multer storage
+// Multer configuration for storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir); // Set upload directory
+    let uploadDir = "my-upload/images/"; // Default directory
+
+    // Customize the upload directory based on the request route
+    if (req.baseUrl.includes("/users")) {
+      uploadDir = "my-upload/uploads/users"; // Directory for user uploads
+    } else if (req.baseUrl.includes("/teams")) {
+      uploadDir = "my-upload/uploads/teams"; // Directory for team uploads
+    } else if (req.baseUrl.includes("/sponsors")) {
+      uploadDir = "my-upload/uploads/sponsors"; // Directory for sponsor uploads
+    }
+
+    // Ensure the directory exists
+    fs.mkdirSync(uploadDir, { recursive: true });
+
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    const sanitizedFilename = file.originalname.replace(/[^a-zA-Z0-9.-]/g, "_"); // Sanitize filename
-    cb(null, `${uniqueSuffix}-${sanitizedFilename}`);
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const sanitizedFilename = file.originalname.replace(/\s+/g, "_");
+    cb(null, uniqueSuffix + sanitizedFilename);
   },
 });
 
-// Configure file filter
-const fileFilter = (req, file, cb) => {
-  const allowedMimetypes = [
-    "image/png",
-    "image/jpg",
-    "image/jpeg",
-    "image/svg+xml",
-    "application/pdf",
-  ];
-  const extension = path.extname(file.originalname).toLowerCase();
-
-  console.log("File mimetype:", file.mimetype);
-  console.log("File extension:", extension);
-
-  if (allowedMimetypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(
-      new Error("Only .jpg, .jpeg, .png, .svg, and .pdf formats are allowed!")
-    );
-  }
-};
-
-// Configure multer instance
 const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: maxSize },
-});
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = [
+      "image/png",
+      "image/jpg",
+      "image/jpeg",
+      "image/svg+xml",
+      "application/pdf",
+    ];
 
-module.exports = upload;
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .jpg, .jpeg, .png, .svg formats are allowed"));
+    }
+  },
+  limits: { fileSize: maxSize },
+})
+
+
+// Middleware to process and save images
+// const processAndSaveImages = async (req, res, next) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).send("No file uploaded.");
+//     }
+
+//     const file = req.file;
+//     const originalFileName = file.filename; // Already sanitized
+//     const mainDir = "./my-upload/images/";
+//     const smallDir = "./my-upload/images/small/";
+
+//     // Ensure directories exist
+//     await fs.ensureDir(mainDir);
+//     await fs.ensureDir(smallDir);
+
+//     // Define output paths
+//     const originalFilePath = `${mainDir}${originalFileName}`;
+//     const smallFilePath = `${smallDir}${originalFileName}`;
+
+//     // Move the original file to the main directory only if the source and destination are different
+//     if (file.path !== originalFilePath) {
+//       await fs.move(file.path, originalFilePath, { overwrite: true });
+//     }
+
+//     // Create and save the small version in the small directory
+//     await sharp(originalFilePath)
+//       .resize(256, 256) // Resize to 256x256 pixels
+//       .toFile(smallFilePath);
+
+//     // Attach the filenames to req for further use
+//     req.imagePaths = {
+//       original: originalFilePath,
+//       small: smallFilePath,
+//     };
+
+//     next(); // Proceed to the next middleware or route handler
+//   } catch (error) {
+//     console.error("Error processing the image:", error);
+//     res.status(500).send("Error processing the image.");
+//   }
+// };
+
+
+module.exports =  upload ;

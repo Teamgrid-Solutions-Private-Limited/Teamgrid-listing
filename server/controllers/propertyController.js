@@ -1,7 +1,7 @@
 // controllers/propertyController.js
-const Property = require('../models/Property');
-const redisClient = require('../config/redis');
-const fetch = require('node-fetch');
+const Property = require('../models/propertySchema');
+// const redisClient = require('../config/redis');
+const fetch =require("node-fetch")
 
 const geocodeAddress = async (address) => {
   const response = await fetch(
@@ -13,6 +13,8 @@ const geocodeAddress = async (address) => {
   if (data.results.length === 0) throw new Error('Invalid address');
   return data.results[0].geometry.location; // { lat, lng }
 };
+
+
 class propertyController{
 
     static addProperty = async (req, res) => {

@@ -6,7 +6,6 @@ const InquirySchema = new Schema(
     property_id: {
       type: Schema.Types.ObjectId,
       ref: "Property",
-      required: true,
     },
     buyer_id: { type: Schema.Types.ObjectId, ref: "users", required: true },
     seller_id: { type: Schema.Types.ObjectId, ref: "users", required: true },
