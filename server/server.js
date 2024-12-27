@@ -6,6 +6,7 @@ const userRoute = require("./routes/userRoutes");
 const roleRoute = require("./routes/roleRoutes");
 const inquiryRoute =require("./routes/inquiryRoute");
 const propertyRoute =require("./routes/propertyRoutes");
+const favouriteRoute =require("./routes/favouriteRoute");
 const path = require("path")
 
 const errorHandler = require("./middlewares/errorHandler");
@@ -33,6 +34,7 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/role", roleRoute);
 app.use("/api/v1/inquiry", inquiryRoute);
 app.use("/api/v1/property",propertyRoute);
+app.use("/api/v1/favourite",favouriteRoute);
 
 // Error handler (must be the last middleware)
 app.use(errorHandler);

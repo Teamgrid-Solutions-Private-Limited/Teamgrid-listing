@@ -6,10 +6,10 @@ class inquiryController {
   // Create a new inquiry
   static async createInquiry(req, res, next) {
     try {
-      const { buyer_id, seller_id, message } = req.body;
+      const { property_id,buyer_id, seller_id, message } = req.body;
 
       // Validate that buyer_id, seller_id, property_id, and message are provided
-      if (!buyer_id || !seller_id ||  !message) {
+      if (!property_id ||!buyer_id || !seller_id ||  !message) {
         throw new AppError("Buyer, seller, property IDs and message are required", 400);
       }
 

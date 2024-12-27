@@ -118,6 +118,9 @@ const Property = require("../models/propertySchema");
 const Joi = require("joi");
 const fetch = require("node-fetch");
 
+const PrecomputedResults = require("../models/precomputedResults");
+
+
 // Primary geocode function using Nominatim
 const geocodeAddress = async (address) => {
   const response = await fetch(
@@ -280,41 +283,47 @@ class propertyController {
     }
   };
 
-
-
   static searchProperties = async (req, res) => {
     try {
       const { lat, lng, radius } = req.query;
-      const radiusInMeters = radius * 1000;
-      const cacheKey = `${lng}:${lat}:${radius}`;
-
-      redisClient.get(cacheKey, async (err, data) => {
-        if (err) throw err;
-
-        if (data) {
-          console.log("Returning cached results");
-          return res.json(JSON.parse(data));
-        }
-
-        const properties = await Property.find({
-          location: {
-            $near: {
-              $geometry: { type: "Point", coordinates: [lng, lat] },
-              $maxDistance: radiusInMeters,
-            },
+  
+      if (!lat || !lng || !radius) {
+        return res.status(400).json({ error: "lat, lng, and radius are required." });
+      }
+  
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lng);
+      const searchRadius = parseFloat(radius);
+  
+      if (isNaN(latitude) || isNaN(longitude) || isNaN(searchRadius)) {
+        return res.status(400).json({ error: "lat, lng, and radius must be valid numbers." });
+      }
+  
+      const radiusInMeters = searchRadius * 1000; // Convert radius from kilometers to meters
+  
+      // Perform geospatial query using MongoDB's $near operator
+      const properties = await Property.find({
+        location: {
+          $near: {
+            $geometry: { type: "Point", coordinates: [longitude, latitude] },
+            $maxDistance: radiusInMeters,
           },
-        });
-
-        redisClient.setEx(cacheKey, 600, JSON.stringify(properties));
-
-        res.json(properties);
+        },
       });
+  
+      if (!properties.length) {
+        return res.status(404).json({ message: "No properties found in the specified area." });
+      }
+  
+      res.status(200).json(properties);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: err.message });
     }
   };
-
+  
+  
+  
   static deleteProperty = async (req, res) => {
     try {
       const { id } = req.params;
