@@ -16,7 +16,7 @@ const PropertySchema = new Schema({
       required: true 
     },  
     area: { type: Number, required: true },  
-    images: [{ type: String }], 
+     
     status: { 
       type: String, 
       enum: ["available", "sold", "rented"], 
@@ -33,4 +33,4 @@ const PropertySchema = new Schema({
   // Create 2D Sphere Index for Geospatial Queries (for map-based search)
   PropertySchema.index({ location: "2dsphere" });
    
-  module.exports = mongoose.model("Property", PropertySchema);
+  module.exports = mongoose.model("property", PropertySchema);
