@@ -7,7 +7,7 @@ const notificationSchema = new Schema({
     message: { type: String, required: true },
     type: { type: String, enum: ["inquiry", "payment", "property"], required: true },
     status: { type: String, enum: ["unread", "read"], default: "unread" },
-   created_at: { type: Date, default: Date.now }
+   
   },{ timestamps: true });
   
 
