@@ -118,7 +118,7 @@ const Property = require("../models/propertySchema");
 const Joi = require("joi");
 const fetch = require("node-fetch");
 
-const PrecomputedResults = require("../models/precomputedResults");
+
 
 
 // Primary geocode function using Nominatim

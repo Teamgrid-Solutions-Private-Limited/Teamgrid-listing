@@ -9,6 +9,7 @@ const propertyRoute =require("./routes/propertyRoutes");
 const favouriteRoute =require("./routes/favouriteRoute");
 const searFilterRoute =require("./routes/searchFilterRoutes");
 const notificationRoute =require("./routes/notificationRoute");
+const adminactivityRoute =require("./routes/adminactivityRoute");
 const path = require("path")
 
 const errorHandler = require("./middlewares/errorHandler");
@@ -39,6 +40,7 @@ app.use("/api/v1/property",propertyRoute);
 app.use("/api/v1/favourite",favouriteRoute);
 app.use("/api/v1/favourite",searFilterRoute);
 app.use("/api/v1/favourite",notificationRoute);
+app.use("/api/v1/adminactivity",adminactivityRoute);
 
 // Error handler (must be the last middleware)
 app.use(errorHandler);
