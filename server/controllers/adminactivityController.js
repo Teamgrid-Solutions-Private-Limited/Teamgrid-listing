@@ -1,5 +1,5 @@
 const AdminActivity = require("../models/adminSchema");
-const UserService = require("../services/UserService");
+const UserService = require("../services/userService");
 
 class adminActivityController {
   // Log an Admin Activity
