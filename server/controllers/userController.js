@@ -5,7 +5,7 @@ const fs = require("fs-extra");
 const validRoles = ["normal_users", "admin"];
 const mongoose = require("mongoose")
 //const jwt = require("jsonwebtoken");
-const  upload  = require("../middlewares/fileUpload");
+ 
 const path =require("path")
 const sharp = require("sharp");
 

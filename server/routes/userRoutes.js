@@ -3,7 +3,7 @@ const router = express.Router();
 
 const userController = require('../controllers/userController');
 const { validateCreateUser } = require('../services/validators');
-const {  upload } = require('../middlewares/fileUpload');
+
 
 router.post('/add',validateCreateUser,userController.createUser);
 // Route to handle user profile update with image upload
