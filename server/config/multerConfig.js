@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
       return cb(new Error("User ID and Property ID are required."));
     }
 
-    const userDir = path.join(__dirname, "../uploads", `user_${userId}`);
+    const userDir = path.join(__dirname, "../my-upload/uploads", `user_${userId}`);
     const propertyDir = path.join(userDir, `property_${propertyId}`);
 
     // Create directories if they don't exist
@@ -36,3 +36,5 @@ const upload = multer({
 });
 
 module.exports = upload;
+
+
