@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../config/multerConfig"); // Import the Multer configuration
+const upload = require("../middlewares/fileUpload"); // Import the Multer configuration
 const ImageController = require("../controllers/imageController"); // Import your controller
 
 // Define the route for uploading and verifying the image

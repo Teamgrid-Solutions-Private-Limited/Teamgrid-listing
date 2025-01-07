@@ -4,13 +4,9 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const { userId, propertyId } = req.body; // Extract IDs from request body
-    if (!userId || !propertyId) {
-      return cb(new Error("User ID and Property ID are required."));
-    }
+  
 
-    const userDir = path.join(__dirname, "../my-upload/uploads", `user_${userId}`);
-    const propertyDir = path.join(userDir, `property_${propertyId}`);
+   
 
     // Create directories if they don't exist
     fs.mkdirSync(propertyDir, { recursive: true });
