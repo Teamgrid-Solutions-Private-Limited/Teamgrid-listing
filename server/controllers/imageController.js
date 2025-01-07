@@ -28,7 +28,7 @@ class ImageController {
       }
 
       // Get the uploaded file path (Multer saves the file in the directory we specified)
-      const imagePath = path.join(__dirname, "../uploads", `user_${userId}`, `property_${propertyId}`, file.filename);
+      const imagePath = path.join(__dirname, "../my-upload/uploads", `user_${userId}`, `property_${propertyId}`, file.filename);
 
       // Extract EXIF data (location info) from the uploaded image
       const exifData = await getExifData(imagePath);

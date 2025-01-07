@@ -1,6 +1,6 @@
 const Roles = require("../models/roleSchema");
 const userService =require("../services/userService")
-const AppError = require("../utils/appError");
+const AppError = require("../utils/AppError");
 const fs = require("fs-extra");
 const validRoles = ["normal_users", "admin"];
 const mongoose = require("mongoose")

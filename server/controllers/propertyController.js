@@ -337,5 +337,33 @@ class propertyController {
       res.status(500).json({ error: err.message });
     }
   };
+
+  static async PropertyCompare(req, res) {
+    try {
+      // Extract property IDs from query parameters
+      const { ids } = req.query;
+
+      // Validate input: Ensure `ids` is an array of valid MongoDB ObjectIds
+      if (!ids || !Array.isArray(ids)) {
+        return res.status(400).json({ error: 'Invalid property IDs provided' });
+      }
+
+      // Fetch properties by their IDs
+      const properties = await Property.find({ _id: { $in: ids } })
+        .select('title price location area property_type status address city state zipCode') // Fetch only relevant fields
+        .lean(); // Convert Mongoose documents to plain objects for faster operations
+
+      // Check if properties were found
+      if (properties.length === 0) {
+        return res.status(404).json({ message: 'No properties found for the given IDs' });
+      }
+
+      // Return the fetched properties
+      return res.status(200).json({ properties });
+    } catch (error) {
+      console.error('Error fetching properties for comparison:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }
 module.exports = propertyController;
