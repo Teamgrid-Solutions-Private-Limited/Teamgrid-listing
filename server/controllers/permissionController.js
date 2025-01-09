@@ -1,4 +1,4 @@
-const Permission = require('../models/permissionScema');
+const Permission = require('../models/permissionSchema');
 
 class permissionController {
   // Create a new permission

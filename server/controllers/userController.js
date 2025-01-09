@@ -1,13 +1,15 @@
 const Roles = require("../models/roleSchema");
 const userService =require("../services/userService")
-const AppError = require("../utils/appError");
+const AppError = require("../utils/AppError");
 const fs = require("fs-extra");
 const validRoles = ["normal_users", "admin"];
 const mongoose = require("mongoose")
 //const jwt = require("jsonwebtoken");
- 
+ const upload = require("../middlewares/fileUpload");
 const path =require("path")
 const sharp = require("sharp");
+const { validationResult } = require("express-validator");
+const User = require("../models/userSchema");
 
 class userController {
   // Create a new user
@@ -119,29 +121,12 @@ class userController {
     }
   }
 
-  // Update a user
-  // static async updateUser(req, res, next) {
-  //   try {
-  //     const { id } = req.params;
-  //     const updates = req.body;
+  //Update a user
 
-  //     const user = await userService.updateUser(id, updates);
 
-  //     if (!user) {
-  //       // Throw error if user not found
-  //       const error = { message: "User not found", statusCode: 404 };
-  //       throw error;
-  //     }
-
-  //     res.status(200).json({
-  //       success: true,
-  //       message: "User updated successfully",
-  //       data: user,
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+ 
+  
+  
   static async updateUser(req, res) {
     upload.single("profileImage")(req, res, async (err) => {
       try {
@@ -222,6 +207,9 @@ class userController {
       }
     });
   }
+ 
+  
+  
   
   // Delete a user
   static async deleteUser(req, res, next) {
