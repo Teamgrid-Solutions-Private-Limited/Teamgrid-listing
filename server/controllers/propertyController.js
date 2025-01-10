@@ -364,6 +364,28 @@ class propertyController {
       console.error('Error fetching properties for comparison:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
+  };
+
+  static createCompare = async (req, res) => {
+    try {
+      const { propertyId } = req.body;
+
+      if (!propertyId || !Array.isArray(propertyId) || propertyId.length < 2) {
+          return res.status(400).json({ message: "Provide at least two property IDs to compare." });
+      }
+
+      const properties = await Property.find({ _id: { $in: propertyId } });
+
+      if (properties.length !== propertyId.length) {
+          return res.status(404).json({ message: "Some properties were not found." });
+      }
+
+      res.status(200).json({ message: "Properties added for comparison", properties });
+  } catch (err) {
+      console.error("Error adding properties to comparison:", err);
+      res.status(500).json({ message: "Internal server error" });
   }
+  };
+
 }
 module.exports = propertyController;
